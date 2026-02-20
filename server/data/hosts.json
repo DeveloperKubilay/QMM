@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1771594365088,
+    "name": "test",
+    "protocol": "ssh",
+    "username": "test",
+    "password": "425ea49abc58647deb7b3e358f9e1b21:62a0096e2b130b2ffe2f8d51690b8ec9",
+    "address": "test",
+    "port": "22",
+    "tags": [],
+    "certs": []
+  }
+]

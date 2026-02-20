@@ -1,0 +1,35 @@
+<!-- index.html - Ana Gösterge Paneli -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>QMM Web Client</title>
+</head>
+<body>
+    <h1>Sunucular</h1>
+    
+    <button onclick="loadHosts()">Yenile 🔄</button>
+    
+    <table border="1" style="width: 100%; margin-top:20px;">
+        <thead>
+            <tr>
+                <th>Ad</th>
+                <th>IP</th>
+                <th>Kullanıcı Adı</th>
+                <th>Şifre</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody id="hostTable">
+            <!-- hosts.js'den dolacak -->
+        </tbody>
+    </table>
+
+    <script src="host-api.js"></script>
+    <script src="host-ui.js"></script>
+    <script>
+        // Sayfa yüklenince çalıştır
+        loadHosts();
+    </script>
+</body>
+</html>
