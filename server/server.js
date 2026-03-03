@@ -7,17 +7,28 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const selfsigned = require('selfsigned');
 const crypto = require('crypto');
-const { Elenora } = require('elenora');
+const elenora = require('elenora');
 
-const logger = new Elenora({
-  path: './logs',
-  name: 'access_logs',
-  maxSize: '50MB' // 50MB log limiti
+const logger = elenora.newLog({
+	filename: 'data/logs/system.log',
+	maxSize: 2 * 1024 * 1024,
+	backupCount: 2
 });
 
 const app = express();
 const PORT = process.env.PORT || 3443;
 const DATA_FILE = path.join(__dirname, 'data', 'hosts.json');
+
+// Başlangıçta Data Klasörü ve Dosyasını Kontrol Et
+const DATA_DIR = path.dirname(DATA_FILE);
+if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+if (!fs.existsSync(DATA_FILE)) {
+    fs.writeFileSync(DATA_FILE, '[]', 'utf8'); // Boş JSON array ile başlat
+    console.log('hosts.json oluşturuldu.');
+}
+
 const API_KEY = process.env.API_KEY || 'default-secret-key';
 const ENCRYPTION_KEY = Buffer.from(process.env.ENCRYPTION_KEY || '12345678901234567890123456789012');
 const IV_LENGTH = 16;
@@ -146,15 +157,38 @@ app.delete('/api/hosts/:id', checkAuth, (req, res) => {
     });
 });
 
-// Self-signed certificate generation
-console.log('Sertifika oluşturuluyor...');
-const attrs = [{ name: 'commonName', value: 'localhost' }];
-const pems = selfsigned.generate(attrs, { days: 365 });
+// Self-signed certificate management
+const CERTS_DIR = path.join(__dirname, 'data', 'certs');
+const CERT_FILE = path.join(CERTS_DIR, 'cert.pem');
+const KEY_FILE = path.join(CERTS_DIR, 'key.pem');
 
-const credentials = {
-    key: pems.private,
-    cert: pems.cert
-};
+// Klasör yoksa oluştur
+if (!fs.existsSync(CERTS_DIR)) {
+    fs.mkdirSync(CERTS_DIR, { recursive: true });
+}
+
+let credentials;
+
+if (fs.existsSync(CERT_FILE) && fs.existsSync(KEY_FILE)) {
+    console.log('Mevcut sertifika yükleniyor...');
+    credentials = {
+        key: fs.readFileSync(KEY_FILE),
+        cert: fs.readFileSync(CERT_FILE)
+    };
+} else {
+    console.log('Yeni sertifika oluşturuluyor...');
+    const attrs = [{ name: 'commonName', value: 'localhost' }];
+    const pems = selfsigned.generate(attrs, { days: 365, keySize: 2048 });
+    
+    fs.writeFileSync(KEY_FILE, pems.private);
+    fs.writeFileSync(CERT_FILE, pems.cert);
+    
+    credentials = {
+        key: pems.private,
+        cert: pems.cert
+    };
+    console.log('Sertifika data/certs klasörüne kaydedildi.');
+}
 
 // Start HTTPS Server
 const httpsServer = https.createServer(credentials, app);
