@@ -1,5 +1,26 @@
 # QMM - Güvenli Makine Yönetim Sistemi
 
+Development objective: To set up a server capable of hosting data from a large number of virtual machines<br>
+It is intended to be developed in integration with [Karshard](https://github.com/DeveloperKubilay/Karshard)/[Termix](https://github.com/DeveloperKubilay/termix)/[Runship](https://github.com/DeveloperKubilay/runship)
+
+All are open source:<br>
+Karshard: Launches virtual servers when the system is under load (e.g., launching and deleting temporary machines to protect against DDoS attacks)<br>
+Termix: Provides an interface through which you can access your virtual servers<br>
+Runship: Allows you to deploy to all your machines just like Docker, thanks to its code deployment system
+
+---
+
+Geliştirilme amacı: Çok fazla sanal makinenin bilgisini barındırabileceğiniz bir sunucu kurmak<br>
+[Karshard](https://github.com/DeveloperKubilay/Karshard)/[Termix](https://github.com/DeveloperKubilay/termix)/[Runship](https://github.com/DeveloperKubilay/runship)'e entegre olarak geliştirilmesi amaçlanıyor
+
+Hepsi açık kaynaklıdır:<br>
+Karshard: Sisteme yük binince sanal sunucular açıyor (örn: ddos saldırıları koruma için kısa süreli makine açıp silme)<br>
+Termix: Sanal sunucularınıza erişebileceğiniz bir arayüz sunuyor <br>
+Runship: Kod dağıtma sistemi tüm makinelerinize tıpkı docker gibi dağıtın
+
+
+![alt text](image.png)
+
 Node.js tabanlı, yüksek güvenlikli (HTTPS + Şifreli Veritabanı) Sunucu Yönetim Sistemi.
 
 ## Özellikler
